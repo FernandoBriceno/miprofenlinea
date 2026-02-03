@@ -61,7 +61,7 @@ function getUsernameFromURL() {
   const u = (params.get("u") || "").trim();
   if (u) return u;
 
-  // 2) Ruta /FernandoBriceno
+  // 2) Ruta /username
   const path = window.location.pathname.replace(/\/+$/, "");
   const last = path.split("/").pop();
   if (!last || last.includes(".html")) return "";

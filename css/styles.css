@@ -223,13 +223,24 @@ main{padding:34px 0 70px}
   background:rgba(106,153,180,.18);
 }
 .avatar img{width:100%; height:100%; object-fit:cover}
-.tutor-name{margin:0; font-size:1.15rem; font-weight:900}
-.tutor-role{margin:2px 0 0; color:var(--muted); font-weight:700; font-size:.92rem}
+/*
+.tutor-name{margin:0; font-size:1.15rem; font-weight:900}*/
+.tutor-name{margin:0 7px 0; font-size:1.50rem; font-weight:900}
+.tutor-role{margin:2px 7px 0; color:var(--muted); font-weight:700; font-size:.92rem}
+.tutor-uni{margin:2px 7px 0; color:var(--muted); font-weight:700; font-size:.92rem}
 
-.meta{margin-top:12px; display:grid; gap:7px}
-.meta-row{display:flex; gap:10px; align-items:baseline; line-height:1.4}
-.meta-label{color:rgba(184,199,217,.78); font-weight:800; min-width:120px}
-.meta-value{color:var(--text); font-weight:700}
+.meta{margin-top:14px; margin-left:7px; display:grid; gap:5px}
+.meta-row{margin-top:5px;display:flex; gap:5px; align-items:baseline; line-height:1.2}
+.meta-label{color:rgba(184,199,217,.78); font-weight:800; min-width:130px}
+.meta-value{
+  color: var(--text);
+  font-weight: 500;
+
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;   /* cámbialo a 3 si quieres */
+  overflow: hidden;
+}
 .badge{
   display:inline-flex;
   align-items:center;
@@ -337,8 +348,8 @@ textarea.input{min-height:120px; resize:vertical}
 /* tutoress--------- */
 
 .avatar{
-  width: 96px;
-  height: 96px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   overflow: hidden;
   flex: 0 0 auto;

@@ -91,6 +91,7 @@ function tutorCard(t) {
         <div>
           <h3 class="tutor-name">${escapeHTML(t.nombre)}</h3>
           <p class="tutor-role">${escapeHTML(t.titulo)}</p>
+          <p class="tutor-uni">${escapeHTML(t.universidad)}</p>
         </div>
       </div>
 
