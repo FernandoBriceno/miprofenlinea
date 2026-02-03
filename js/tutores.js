@@ -110,10 +110,12 @@ function tutorCard(t) {
           <span class="meta-value">${escapeHTML(t.modalidad)}</span>
         </div>
 
+        <!-- 
         <div class="meta-row">
           <span class="meta-label">Precios</span>
           <span class="meta-value">${escapeHTML(t.precio)}</span>
         </div>
+        -->
       </div>
     </a>
   `;

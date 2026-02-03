@@ -123,7 +123,7 @@ async function loadProfile() {
   document.getElementById("tutorMaterias").textContent = t.materias || "";
   document.getElementById("tutorNivel").textContent = t.nivel || "";
   document.getElementById("tutorModalidad").textContent = t.modalidad || "";
-  document.getElementById("tutorPrecio").textContent = t.precio || "";
+  //document.getElementById("tutorPrecio").textContent = t.precio || "";
   document.getElementById("tutorDescripcion").textContent = t.descripcion || "";
 
   // Foto (si no existe, usa genérica)
