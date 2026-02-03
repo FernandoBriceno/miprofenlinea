@@ -56,9 +56,32 @@ function rowsToObjects(rows) {
 }
 
 function getUsernameFromURL() {
+  // 1) Query param ?u=
   const params = new URLSearchParams(window.location.search);
-  return (params.get("u") || "").trim();
+  const u = (params.get("u") || "").trim();
+  if (u) return u;
+
+  // 2) Ruta /FernandoBriceno
+  const path = window.location.pathname.replace(/\/+$/, "");
+  const last = path.split("/").pop();
+  if (!last || last.includes(".html")) return "";
+
+  return decodeURIComponent(last);
 }
+
+
+
+//Poner lindo el nombre de usuario
+function setPrettyUrl(username) {
+  const clean = encodeURIComponent(username.trim());
+  const prettyPath = `/${clean}`;
+
+  // No cambia la URL si ya está en /username
+  if (window.location.pathname !== prettyPath) {
+    window.history.replaceState({}, "", prettyPath);
+  }
+}
+
 
 function tutorPhotoPath(username) {
   // Si usas PNG en vez de JPG, cambia la extension aquí
@@ -71,6 +94,9 @@ async function loadProfile() {
     document.getElementById("tutorNombre").textContent = "Tutor no especificado";
     return;
   }
+
+  //cambia la URL visible a /username (sin recargar)
+  setPrettyUrl(username);
 
   const url = `${SHEET_CSV_URL}&_=${Date.now()}`; // evita cache
   const res = await fetch(url, { cache: "no-store" });

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>miprofenlinea</title>
+
+  <script>
+    (function () {
+      // Path pedido, por ejemplo "/FernandoBriceno" o "/contacto.html"
+      var path = window.location.pathname.replace(/^\/+|\/+$/g, ""); // sin "/" al inicio/fin
+
+      // Si no hay path (raro en 404), vuelve al home
+      if (!path) {
+        window.location.replace("/");
+        return;
+      }
+
+      // NO interceptar rutas reales/archivos
+      // - archivos con extensión (.css, .js, .png, .html, etc.)
+      // - carpetas reales del sitio
+      var isFile = path.indexOf(".") !== -1;
+      var isKnownFolder =
+        path.startsWith("assets/") ||
+        path.startsWith("css/") ||
+        path.startsWith("js/") ||
+        path.startsWith("tutores/") ||
+        path.startsWith("partials/");
+
+      if (isFile || isKnownFolder) {
+        // Deja que GitHub muestre el 404 normal
+        return;
+      }
+
+      // Si llega aquí, asumimos que es un username
+      var username = encodeURIComponent(path);
+
+      // Redirige a la plantilla del perfil
+      window.location.replace("/tutores/perfil.html?u=" + username);
+    })();
+  </script>
+</head>
+<body></body>
+</html>
