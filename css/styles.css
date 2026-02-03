@@ -322,8 +322,8 @@ textarea.input{min-height:120px; resize:vertical}
 
 /* LOGO */
 .brand-logo{
-  width: 80px;
-  height: 80px;
+  width: 50px;
+  height: 50px;
   object-fit: contain;
   border-radius: 10px; /* si quieres esquinas suaves; cámbialo a 50% si lo quieres circular */
   display: block;
