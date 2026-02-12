@@ -231,14 +231,14 @@ main{padding:34px 0 70px}
 
 .meta{margin-top:14px; margin-left:7px; display:grid; gap:5px}
 .meta-row{margin-top:5px;display:flex; gap:5px; align-items:baseline; line-height:1.2}
-.meta-label{color:rgba(184,199,217,.78); font-weight:800; min-width:130px}
+.meta-label{color:rgba(184,199,217,.78); font-weight:800; min-width:100px}
 .meta-value{
   color: var(--text);
   font-weight: 500;
 
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;   /* cámbialo a 3 si quieres */
+  -webkit-line-clamp: 2;   /* cámbialo a 3 si quieres */
   overflow: hidden;
 }
 .badge{
