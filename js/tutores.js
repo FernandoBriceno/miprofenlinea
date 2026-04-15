@@ -4,7 +4,7 @@ const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQcWh2_N6
 // 2) Si usarás fotos locales por username, ponlas en: assets/tutores/<username>.jpg (o .png)
 function getTutorPhoto(username) {
   // Ajusta la extension si prefieres .png
-  return `../assets/tutores/${username}.jpg`;
+  return `../assets/tutores/${username}.png`;
 }
 
 function escapeHTML(str = "") {
