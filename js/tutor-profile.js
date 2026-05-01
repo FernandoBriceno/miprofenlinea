@@ -120,6 +120,7 @@ async function loadProfile() {
   // Set info
   document.getElementById("tutorNombre").textContent = t.nombre || username;
   document.getElementById("tutorTitulo").textContent = t.titulo || "";
+  document.getElementById("tutorUniversidad").textContent = t.universidad || "";
   document.getElementById("tutorMaterias").textContent = t.materias || "";
   document.getElementById("tutorNivel").textContent = t.nivel || "";
   document.getElementById("tutorModalidad").textContent = t.modalidad || "";
