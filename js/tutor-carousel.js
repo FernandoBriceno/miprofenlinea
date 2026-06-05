@@ -1,5 +1,8 @@
-// js/tutor-carousel.js (INFINITO estable con 3 listas completas)
+// js/tutor-carousel.js (FINITO con lista duplicada/triplicada real)
 const TUTORES_JSON_URL = "data/tutores.json";
+
+// Cuántas copias completas quieres (3 recomendado: [real][real][real])
+const COPIES = 3;
 
 function firstName(fullName = "") {
   const parts = String(fullName).trim().split(/\s+/);
@@ -77,8 +80,8 @@ function setActiveByCenter(track) {
 }
 
 /**
- * Scroll a un índice dentro de las slides.
- * Si instant=true, no anima (salto invisible).
+ * Centrado horizontal dentro del viewport del carrusel
+ * (NO usa scrollIntoView para evitar saltos verticales en móvil)
  */
 function scrollToIndex(track, index, instant = false) {
   const slides = [...track.querySelectorAll(".tutor-slide")];
@@ -86,9 +89,9 @@ function scrollToIndex(track, index, instant = false) {
 
   const target = slides[Math.max(0, Math.min(index, slides.length - 1))];
 
-  // centrado horizontal dentro del viewport del carrusel
   const viewport = track.closest(".tutor-carousel__viewport");
   const viewportW = viewport ? viewport.clientWidth : track.clientWidth;
+
   const left = target.offsetLeft - (viewportW - target.offsetWidth) / 2;
 
   track.scrollTo({
@@ -96,6 +99,7 @@ function scrollToIndex(track, index, instant = false) {
     behavior: instant ? "auto" : "smooth"
   });
 }
+
 async function initTutorCarousel() {
   const track = document.getElementById("tutorCarouselTrack");
   if (!track) return;
@@ -115,38 +119,60 @@ async function initTutorCarousel() {
       return;
     }
 
-    // 1) Triple lista: [real][real][real]
-    const extended = [...real, ...real, ...real];
+    // 1) Crear un nuevo arreglo REAL duplicado COPIES veces
+    // Ej: COPIES=3 => [real][real][real]
+    const extended = Array.from({ length: COPIES }, () => real).flat();
+
     track.innerHTML = extended.map(tutorSlideHTML).join("");
 
-    // 2) Comenzar en el primer elemento del bloque del medio
-    // Bloque 0: 0..n-1, bloque 1: n..2n-1, bloque 2: 2n..3n-1
-    let activeExtendedIndex = n;
+    const slides = [...track.querySelectorAll(".tutor-slide")];
+    const total = slides.length;
 
+    // 2) Comenzar en el primer elemento del bloque del medio:
+    // si COPIES=3, el bloque del medio comienza en index = n
+    // si COPIES=5, el bloque del medio comienza en index = 2n, etc.
+    const middleBlock = Math.floor(COPIES / 2);
+    let activeIndex = middleBlock * n; // primer item del bloque central
+
+    // Centrar inicial sin animación
     requestAnimationFrame(() => {
-      scrollToIndex(track, activeExtendedIndex, true);
+      scrollToIndex(track, activeIndex, true);
       setActiveByCenter(track);
+      updateButtons();
     });
 
-    // Helper: índice del activo (por clase)
-    function currentExtendedIndex() {
-      const slides = [...track.querySelectorAll(".tutor-slide")];
+    // Índice actual del activo por clase (por si el usuario desliza con dedo)
+    function currentIndex() {
       const idx = slides.findIndex(s => s.classList.contains("is-active"));
-      return idx >= 0 ? idx : activeExtendedIndex;
+      return idx >= 0 ? idx : activeIndex;
     }
 
-    // Flechas
+    function updateButtons() {
+      // Deshabilita visualmente si estás en extremos
+      if (btnPrev) btnPrev.disabled = (activeIndex <= 0);
+      if (btnNext) btnNext.disabled = (activeIndex >= total - 1);
+      if (btnPrev) btnPrev.style.opacity = btnPrev.disabled ? ".45" : "1";
+      if (btnNext) btnNext.style.opacity = btnNext.disabled ? ".45" : "1";
+      if (btnPrev) btnPrev.style.pointerEvents = btnPrev.disabled ? "none" : "auto";
+      if (btnNext) btnNext.style.pointerEvents = btnNext.disabled ? "none" : "auto";
+    }
+
+    // Flechas: FINITO (no wrap)
     btnPrev?.addEventListener("click", () => {
-      const idx = currentExtendedIndex();
-      scrollToIndex(track, idx - 1);
+      const idx = currentIndex();
+      activeIndex = Math.max(0, idx - 1);
+      scrollToIndex(track, activeIndex);
+      updateButtons();
     });
 
     btnNext?.addEventListener("click", () => {
-      const idx = currentExtendedIndex();
-      scrollToIndex(track, idx + 1);
+      const idx = currentIndex();
+      activeIndex = Math.min(total - 1, idx + 1);
+      scrollToIndex(track, activeIndex);
+      updateButtons();
     });
 
-    // 3) Teleport SOLO al finalizar scroll (evita salto/temblor)
+    // Scroll manual (touch): solo actualiza activo + botones al final del scroll
     let raf = null;
     let scrollEndTimer = null;
 
@@ -156,30 +182,16 @@ async function initTutorCarousel() {
 
       if (scrollEndTimer) clearTimeout(scrollEndTimer);
       scrollEndTimer = setTimeout(() => {
-        const idx = currentExtendedIndex();
-
-        // Si caes en bloque izquierdo, salta al medio (idx + n)
-        // Si caes en bloque derecho, salta al medio (idx - n)
-        let newIdx = idx;
-
-        if (idx < n) newIdx = idx + n;
-        else if (idx >= 2 * n) newIdx = idx - n;
-
-        if (newIdx !== idx) {
-          activeExtendedIndex = newIdx;
-          scrollToIndex(track, newIdx, true); // invisible
-        } else {
-          activeExtendedIndex = idx;
-        }
-
-        setActiveByCenter(track);
+        activeIndex = currentIndex();
+        updateButtons();
       }, 120);
     });
 
-    // 4) Resize: mantener el índice activo centrado (sin romper back/forward)
+    // Resize: recenter sin romper
     window.addEventListener("resize", () => {
-      scrollToIndex(track, activeExtendedIndex, true);
+      scrollToIndex(track, activeIndex, true);
       setActiveByCenter(track);
+      updateButtons();
     });
 
   } catch (e) {
