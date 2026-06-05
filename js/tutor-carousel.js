@@ -86,16 +86,16 @@ function scrollToIndex(track, index, instant = false) {
 
   const target = slides[Math.max(0, Math.min(index, slides.length - 1))];
 
-  if (instant) {
-    const prev = track.style.scrollBehavior;
-    track.style.scrollBehavior = "auto";
-    target.scrollIntoView({ behavior: "auto", inline: "center", block: "nearest" });
-    track.style.scrollBehavior = prev || "";
-  } else {
-    target.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
-  }
-}
+  // centrado horizontal dentro del viewport del carrusel
+  const viewport = track.closest(".tutor-carousel__viewport");
+  const viewportW = viewport ? viewport.clientWidth : track.clientWidth;
+  const left = target.offsetLeft - (viewportW - target.offsetWidth) / 2;
 
+  track.scrollTo({
+    left,
+    behavior: instant ? "auto" : "smooth"
+  });
+}
 async function initTutorCarousel() {
   const track = document.getElementById("tutorCarouselTrack");
   if (!track) return;
